@@ -14,7 +14,7 @@ library(tidyverse) #this is the parent package
 
 ### Aesthetic
 
-The base layer is added by ggplot(). geom() function adds attributes with different properties onto top of the base layer. The visual property of the objects can be points, lines etc.
+The base layer is added by `ggplot()`. `geom()` function adds attributes with different properties onto top of the base layer. The visual property of the objects can be points, lines etc.
 
 ```{r}
 ggplot(data = mpg) + 
@@ -29,7 +29,7 @@ ggplot(data = mpg) +
 #> Warning: Using size for a discrete variable is not advised. 
 ```
 
-Can we change point transparency by class? Yes, we use the argument alpha= for this.\
+Can we change point transparency by class? Yes, we use the argument `alpha=` for this.\
 This is very helpful for dense point clouds, where you want a reader to see that there are overlapping data points.
 
 ```{r}
@@ -60,7 +60,7 @@ There are several aesthetics that can be set up manually - colour of point, size
 ### Facet and panel plots
 
 This allows you to develop **separate plots** for a range of reasons, most often to show a **subset** of your data. To subset/facet your plot using a single variable, you use facet_wrap().\
-**\~** dictates which variable you want to subset your data with
+[***\~** dictates which variable you want to subset your data with*]{.underline}
 
 ```{r}
 #Note: only use facet_wrap() for discrete variables.
@@ -69,7 +69,7 @@ ggplot(data = mpg) +
   facet_wrap(~ class, nrow = 2) #making separate plots as a function of 'class'
 ```
 
-If you want to use a combination of two variables to facet plots, use facet_grid(); separating the variables by a \~.
+If you want to use a combination of two variables to facet plots, use `facet_grid()`; separating the variables by a \~.
 
 ```{r}
 ggplot(data = mpg) + 
@@ -87,14 +87,14 @@ ggplot(data = mpg) +
 
 ### Fitting simple lines
 
-In ggplot2 we can use a variety of visual objects to represent our data points. 1. Display data as points
+In `ggplot2` we can use a variety of visual objects to represent our data points. 1. Display data as points
 
 ```{r}
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = displ, y = hwy))
 ```
 
-2.  Data a smooth line fir through the points
+2.  Data a smooth line fit through the points
 
 ```{r}
 ggplot(data = mpg) + 
@@ -111,7 +111,7 @@ ggplot(data = mpg) +
   geom_smooth(mapping = aes(x = displ, y = hwy, colour = drv, linetype = drv)) # based on drv variable, changing the type of line
 ```
 
-How does grouping objects by categorical variables work in ggplot2?
+How does grouping objects by categorical variables work in `ggplot2`?
 
 ```{r}
  ggplot(data = mpg) +
@@ -164,7 +164,7 @@ ggplot(data = diamonds) +
 
 Though we have just provided R with the x variable, it is outputting a plot. How is R calculating this? It is "binning" our data and then plotting our bin counts.
 
-You can generally use ***geoms*** and ***stats*** interchangeably. For example, you can recreate the previous plot using stat_count() instead of geom_bar().
+You can generally use ***geoms*** and ***stats*** interchangeably. For example, you can recreate the previous plot using `stat_count()` instead of `geom_bar()`.
 
 ```{r}
 ggplot(data = diamonds) + 
@@ -274,7 +274,7 @@ FACET_FUNCTION\
 
 ### Labels
 
-Using the labs() function
+Using the `labs()` function
 
 ```{r}
 #Scenario 1: title, subtitle, caption
@@ -300,7 +300,7 @@ ggplot(mpg, aes(displ, hwy)) +
 
 ### Annotations
 
-What if you want to add text to the plot directly? Here we use geom_text() to add textual labels to our plots. This works similar to geom_point() but rather than a shape geometry it adds a label.
+What if you want to add text to the plot directly? Here we use `geom_text()` to add textual labels to our plots. This works similar to geom_point() but rather than a shape geometry it adds a label.
 
 ```{r}
 best_in_class <- mpg %>%
@@ -420,172 +420,4 @@ ggplot(mpg, aes(displ, hwy)) +
   theme_dark()
 
 ## You can also set all the arguments for theme() yourself.
-```
-
-## Data wrangling in R
-
-### Data tidying using tidyR
-
-Let's begin by understanding what makes a tidy dataset and why you [*always*]{.underline} should strive to get your data into a tidy format. There are some rules to keep in mind while tidying datasets:
-
-1.  Each [**variable**]{.underline} must have its own [**column**]{.underline}.
-
-2.  Each [**observation**]{.underline} must have its own [**row**]{.underline}.
-
-3.  Each [**value**]{.underline} must have its own [**cell**]{.underline}.
-
-In todays workshop we’ll use both %\>%, and \|\>  which achieve the exact same thing (\|\> is brand new in base R, %\>% only works in tidyr and magrittr packages). %\>% is a pipe that is used when you intend to apply a function (right of a pipe) to the data (left of the pipe). The process is called 'piping'.
-
-If encountered with data that does not confer to the above rules, we can correct that using the **pivot** function. In tidyr: pivot_longer() is used to lengthen data and pivot_wider() is used to widen data.
-
-Let's work this out using the 'billboard' dataset.
-
-```{r}
-billboard
-#in this tibble, the actual values i.e., wk1, wk2 etc. are column names --> cell values
-## remember the rules: each row is an observation
-
-billboard %>%
-  pivot_longer(
-    cols = starts_with("wk"), #specifies the columns you want to pivot
-    names_to = "week", #this names the variables stored in the column names
-    values_to = "rank", #this names the variable stored in the cell values that we names rank
-    values_drop_na = TRUE #removes all the NAs in the dataset
-  )
-#week and rank are in quotes as they ar enew variables we are creating
-```
-
-Second example of pivoting
-
-```{r}
-df <- tribble(
-  ~id,  ~bp1, ~bp2,
-   "A",  100,  120,
-   "B",  140,  115,
-   "C",  120,  125
-)
-
-df %>%
-  pivot_longer(
-    cols = starts_with("bp"),
-    names_to = "measurement",
-    values_to = "value"
-  )
-```
-
-How does widening work? You use this in the case where an observation is spread across two rows.
-
-```{r}
-cms_patient_experience %>%
-  pivot_wider(
-    id_cols = starts_with("org"), #specify which column has values that uniquely identify each row
-    names_from = measure_cd,
-    values_from = prf_rate
-  )
-```
-
-Practice question for widening
-
-```{r}
-df <- tribble(
-  ~id, ~measurement, ~value,
-  "A",        "bp1",    100,
-  "B",        "bp1",    140,
-  "B",        "bp2",    115, 
-  "A",        "bp2",    120,
-  "A",        "bp3",    105
-)
-#first thing to notice is that there are duplicate rows
-
-df %>%
-  pivot_wider(
-    names_from = measurement,
-    values_from = value
-  )
-```
-
-#### Exercise questions
-
-1.   Why are pivot_longer() and pivot_wider() not perfectly symmetrical? Carefully consider the following example.
-
-```{r}
-stocks <- tibble(
-  year   = c(2015, 2015, 2016, 2016),
-  half  = c(   1,    2,     1,    2),
-  return = c(1.88, 0.59, 0.92, 0.17)
-)
-stocks
-stocks %>% 
-  pivot_wider(names_from = year, values_from = return) %>% 
-  pivot_longer(
-    cols = c(`2015`, `2016`),
-    names_to = "year",
-    values_to = "return")
-
-# Why not perfectly symmetrical?
-##pivot_wider() and pivot_longer() are not perfectly symmetrical because when a variable is widened into column names, its type is lost (numeric years become character column names). When pivoting longer again, you only recover characters unless you explicitly coerce. The `names_ptypes` argument exists to enforce the intended type (e.g., double() for years), restoring consistency with the original data.
-```
-
-2.  Why does this code fail?
-
-```{r}
-# table4a %>% 
-  # pivot_longer(c(1999, 2000), names_to = "year", values_to = "cases")
-
-#> Error in `pivot_longer()`:
-#> ! Can't subset columns past the end.
-#> ℹ Locations 1999 and 2000 don't exist.
-#> ℹ There are only 3 columns.
-
-##The `cols` argument of pivot_longer() does not recognise the locations of the columns -- it is read as column numbers 1999 and 2000. This can be solved by using cols = c(`1999`, `2000`)
-
-```
-
-3.  Consider the sample tibble below. Do you need to make it wider or longer? What are the variables?
-
-```{r}
-preg <- tribble(
-  ~pregnant, ~male, ~female,
-  "yes",     NA,    10,
-  "no",      20,    12
-)
-
-## There are two variables here -- sex and pregnancy status -> these should be the columns
-
-preg_tidy <- preg %>%
-  pivot_longer(
-    cols = c(`male`, `female`),
-    names_to = "sex",
-    values_to = "count",
-    values_drop_na = TRUE
-  )
-preg_tidy
-
-#we can further tidy up the data by following this rule --> "If a variable takes two values, like pregnant and sex, it is often preferable to store them as logical vectors."
-preg_tidy.2 <- preg_tidy %>%
-  mutate(
-    female = sex == "female",
-    pregnant = pregnant == "yes"
-  ) %>%
-  select(pregnant, female, count)
-preg_tidy.2
-```
-
-#### Implicit missing values
-
-sometimes we need to have explicit missings, instead of implicit missings inorder to have something to work with. Let's work with an example here –
-
-```{r}
-stocks <- tibble(
-  year  = c(2020, 2020, 2020, 2020, 2021, 2021, 2021),
-  qtr   = c(   1,    2,    3,    4,    2,    3,    4),
-  price = c(1.88, 0.59, 0.35,   NA, 0.92, 0.17, 2.66)
-)
-
-# Using pivot_wider() is one easy of doing this. we stretch out the dataframe to force the entry of missing values.
-stocks %>%
-  pivot_wider(
-    names_from = qtr,
-    values_from = price
-  )
 ```
